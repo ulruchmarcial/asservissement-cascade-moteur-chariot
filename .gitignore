@@ -13,6 +13,11 @@ correcteur_vitesse.mat
 correcteur_position.mat
 correcteur_force.mat
 
+# Fichiers projet exclus du dépôt
+Modele_Projet_H2026_Gabarit.slx*
+Rapport_projet_session.pdf*
+
+
 # Figures (générées par export_figures.m — à committer manuellement)
 # Décommenter la ligne suivante pour ignorer les figures :
 # figures/
