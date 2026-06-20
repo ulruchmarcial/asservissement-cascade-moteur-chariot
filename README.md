@@ -18,9 +18,9 @@
 
 ## Schéma fonctionnel du système
 
-![Schéma fonctionnel](figures/schema_fonctionnel.jng)
+![Schéma fonctionnel](figures/schema_fonctionnel.jpg)
 
-> **Pour ajouter le schéma :** déposez une photo ou scan de votre schéma bloc dans `figures/` sous le nom `schema_fonctionnel.jng`.
+> **Pour ajouter le schéma :** déposez une photo ou scan de votre schéma bloc dans `figures/` sous le nom `schema_fonctionnel.jpg`.
 
 ---
 
