@@ -54,11 +54,15 @@ damp(G_BO_v)    % affiche ω_n et ξ pour chaque pôle
 
 Pour une paire de pôles complexes conjugués $p_{1,2} = -\sigma \pm j\omega_d$ :
 
-$$\xi = \frac{\sigma}{\omega_n}, \quad \omega_n = \sqrt{\sigma^2 + \omega_d^2}$$
+```math
+\xi = \frac{\sigma}{\omega_n}, \qquad \omega_n = \sqrt{\sigma^2 + \omega_d^2}
+```
 
 Le facteur d'amortissement $\xi$ contrôle le dépassement en réponse indicielle :
 
-$$D\% = 100\,e^{-\pi\xi/\sqrt{1-\xi^2}}$$
+```math
+D\% = 100\,e^{-\pi\xi/\sqrt{1-\xi^2}}
+```
 
 | $\xi$ | $D\%$ | Régime |
 |-------|-------|--------|
@@ -111,7 +115,9 @@ Phase [°]          ╲
 
 Mesurée à la **pulsation de coupure à 0 dB** $\omega_{cp}$ :
 
-$$P_m = 180° + \angle G_{BO}(j\omega_{cp})$$
+```math
+P_m = 180° + \angle G_{BO}(j\omega_{cp})
+```
 
 Elle représente le **retard de phase supplémentaire** qu'on pourrait ajouter avant que le système devienne instable.
 
@@ -119,7 +125,9 @@ Elle représente le **retard de phase supplémentaire** qu'on pourrait ajouter a
 
 Mesurée à la **pulsation de croisement de phase** $\omega_{cg}$ (là où la phase = −180°) :
 
-$$G_m = -20\log_{10}|G_{BO}(j\omega_{cg})|\ \text{[dB]}$$
+```math
+G_m = -20\log_{10}|G_{BO}(j\omega_{cg})|\ \text{[dB]}
+```
 
 Elle représente l'**amplification supplémentaire** qu'on pourrait appliquer avant instabilité.
 
@@ -161,7 +169,9 @@ margin(G_BO_v);   % trace Bode avec marges en surimpression
 
 Le **lieu des racines** (root locus) montre comment les pôles en **boucle fermée** se déplacent dans le plan complexe lorsque le gain $K$ varie de 0 à $+\infty$.
 
-$$T(s) = \frac{K\,G(s)}{1 + K\,G(s)}$$
+```math
+T(s) = \frac{K\,G(s)}{1 + K\,G(s)}
+```
 
 Les pôles BF partent des pôles BO ($K=0$) et convergent vers les zéros BO ($K\to\infty$).
 
@@ -175,11 +185,3 @@ rlocus(G_BO_v);   % trace le lieu des racines
 
 → [02_analyse_frequentielle.m](02_analyse_frequentielle.m)
 
----
-
-## Questions de révision
-
-1. Le système non corrigé $G_{BO\_v}$ est-il stable en boucle fermée pour un gain unitaire ? Justifier avec la carte pôles–zéros.
-2. Quelle est la différence entre la marge de phase et le facteur d'amortissement ? Comment sont-ils liés ?
-3. Pourquoi $G_{BO\_p}$ a-t-il un pôle de plus que $G_{BO\_v}$ ?
-4. Si la marge de phase de la boucle ouverte est 30°, quel dépassement approximatif observe-t-on en BF ?

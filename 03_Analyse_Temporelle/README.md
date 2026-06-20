@@ -18,11 +18,15 @@
 
 La **réponse indicielle** est la sortie $y(t)$ obtenue pour une entrée échelon $u(t) = 1(t)$ :
 
-$$U(s) = \frac{1}{s} \quad\Rightarrow\quad Y(s) = H(s)\cdot\frac{1}{s}$$
+```math
+U(s) = \frac{1}{s} \quad\Rightarrow\quad Y(s) = H(s)\cdot\frac{1}{s}
+```
 
 **Valeur finale** (théorème de la valeur finale) :
 
-$$y(\infty) = \lim_{t\to\infty}y(t) = \lim_{s\to 0}s\cdot Y(s) = \lim_{s\to 0}s\cdot H(s)\cdot\frac{1}{s} = H(0)$$
+```math
+y(\infty) = \lim_{t\to\infty}y(t) = \lim_{s\to 0}s\cdot Y(s) = H(0)
+```
 
 ### Indicateurs graphiques
 
@@ -61,7 +65,9 @@ La **classe** est le nombre d'intégrateurs $1/s^k$ présents en **boucle ouvert
 
 Pour un système bouclé avec retour unitaire et gain de boucle $G_{BO}(s)$ :
 
-$$\varepsilon(\infty) = \lim_{s\to 0}\frac{s\cdot(1/s)}{1 + G_{BO}(s)} = \frac{1}{1 + K_p}$$
+```math
+\varepsilon(\infty) = \frac{1}{1 + K_p}
+```
 
 avec $K_p = \lim_{s\to 0}G_{BO}(s)$ (gain statique de la boucle ouverte).
 
@@ -75,17 +81,23 @@ avec $K_p = \lim_{s\to 0}G_{BO}(s)$ (gain statique de la boucle ouverte).
 
 **Boucle vitesse $G_{BO\_v}$ — Classe 0 :**
 
-$$K_p = G_{BO\_v}(0) = \frac{k_m \cdot U_B}{(R_m\,B_m + k_m k_v)} \quad\text{(fini)}$$
-
-$$\varepsilon_{statique} = \frac{1}{1 + K_p} \times 100\% \neq 0$$
+```math
+K_p = G_{BO\_v}(0) = \frac{k_m \cdot U_B}{R_m B_m + k_m k_v} \quad\text{(fini)}
+\qquad\Rightarrow\qquad
+\varepsilon_{statique} = \frac{1}{1 + K_p} \neq 0
+```
 
 → En l'état, le correcteur de vitesse devra inclure un **intégrateur** pour annuler cette erreur.
 
 **Boucle position $G_{BO\_p}$ — Classe 1 :**
 
-$$G_{BO\_p}(s) = G_{BO\_v}(s)\cdot\frac{r}{G\cdot s} \quad\Rightarrow\quad \text{1 intégrateur naturel}$$
-
-$$\varepsilon_{échelon} = 0 \quad;\quad \varepsilon_{rampe} = \frac{1}{K_v} = \frac{1}{\lim_{s\to0}s\cdot G_{BO\_p}(s)}$$
+```math
+G_{BO\_p}(s) = G_{BO\_v}(s)\cdot\frac{r}{G\cdot s}
+\quad\Rightarrow\quad
+\varepsilon_{\text{échelon}} = 0
+\qquad
+\varepsilon_{\text{rampe}} = \frac{1}{K_v}
+```
 
 ---
 
@@ -95,7 +107,9 @@ Un système **en boucle ouverte** n'a pas de retour d'information. La sortie ne 
 
 Un système **en boucle fermée** (retour unitaire) :
 
-$$T(s) = \frac{G(s)}{1 + G(s)}$$
+```math
+T(s) = \frac{G(s)}{1 + G(s)}
+```
 
 **La boucle fermée modifie :**
 - Les pôles du système (les pôles BF ne sont pas les pôles BO)
@@ -125,7 +139,9 @@ fprintf('Temps de réponse : %.3f s\n', info.SettlingTime);
 
 Le gain statique $K_p = G_{BO\_v}(0)$ est fini. En boucle fermée unitaire (sans correcteur), l'erreur à un échelon de vitesse est :
 
-$$\varepsilon_v = \frac{1}{1 + K_p} \times 100\% \neq 0$$
+```math
+\varepsilon_v = \frac{1}{1 + K_p} \neq 0
+```
 
 → **Conclusion :** il faut ajouter un intégrateur au correcteur de vitesse pour ramener l'erreur à zéro.
 
@@ -133,7 +149,9 @@ $$\varepsilon_v = \frac{1}{1 + K_p} \times 100\% \neq 0$$
 
 L'intégrateur $r/(Gs)$ est naturellement présent. En boucle fermée, l'erreur à un échelon de position est **nulle**. Cependant, l'erreur à une rampe (traînage) est :
 
-$$\varepsilon_{trainage} = \frac{1}{K_v} = \frac{G}{r}\cdot\lim_{s\to 0}\frac{1}{G_{BO\_v}(s)} = \frac{G\,R_m\,B_m + G\,k_m k_v}{r\,k_m\,U_B}$$
+```math
+\varepsilon_{\text{trainage}} = \frac{1}{K_v} = \frac{G\,R_m B_m + G\,k_m k_v}{r\,k_m\,U_B}
+```
 
 ---
 
@@ -141,12 +159,3 @@ $$\varepsilon_{trainage} = \frac{1}{K_v} = \frac{G}{r}\cdot\lim_{s\to 0}\frac{1}
 
 → [03_analyse_temporelle.m](03_analyse_temporelle.m)
 
----
-
-## Questions de révision
-
-1. Pourquoi la boucle de position est-elle de classe 1 alors que la boucle de vitesse est de classe 0 ?
-2. Si le gain $K_p$ de la boucle vitesse vaut 5, quelle est l'erreur statique en boucle fermée unitaire ?
-3. Un système de classe 1 a-t-il une erreur nulle à une entrée rampe ? Justifier.
-4. Quelle relation lie la marge de phase à l'amortissement ξ pour un système du 2ème ordre dominant ?
-5. Pourquoi trace-t-on la réponse en boucle ouverte ET en boucle fermée ?

@@ -59,7 +59,9 @@ Chaque variable est régulée par sa propre boucle. Les boucles sont imbriquées
 
 Pour que les boucles se comportent de façon **indépendante** (sans interaction dynamique), les bandes passantes doivent être suffisamment séparées :
 
-$$\omega_{cp,externe} \leq \frac{\omega_{cp,interne}}{5}$$
+```math
+\omega_{cp,externe} \leq \frac{\omega_{cp,interne}}{5}
+```
 
 ### Application au projet
 
@@ -87,7 +89,9 @@ $$\omega_{cp,externe} \leq \frac{\omega_{cp,interne}}{5}$$
 
 ### Étape 1 — Boucle vitesse fermée
 
-$$T_{vitesse}(s) = \frac{C_2(s)\cdot G_{BO\_v}(s)}{1 + C_2(s)\cdot G_{BO\_v}(s)}$$
+```math
+T_{vitesse}(s) = \frac{C_2(s)\cdot G_{BO\_v}(s)}{1 + C_2(s)\cdot G_{BO\_v}(s)}
+```
 
 Pour la boucle de position, $T_{vitesse}$ est une "boîte noire" (idéalement : $T_{vitesse}\approx 1$ dans la BP de position).
 
@@ -95,17 +99,21 @@ Pour la boucle de position, $T_{vitesse}$ est une "boîte noire" (idéalement : 
 
 On boucle sur la sortie position :
 
-$$G_{pos}(s) = T_{vitesse}(s)\cdot G_{cin}(s) = T_{vitesse}(s)\cdot\frac{r}{G\cdot s}$$
-
-$$T_{position}(s) = \frac{C_1(s)\cdot G_{pos}(s)}{1 + C_1(s)\cdot G_{pos}(s)}$$
+```math
+G_{pos}(s) = T_{vitesse}(s)\cdot\frac{r}{G\cdot s}
+\qquad
+T_{position}(s) = \frac{C_1(s)\cdot G_{pos}(s)}{1 + C_1(s)\cdot G_{pos}(s)}
+```
 
 ### Étape 3 — Boucle force fermée
 
 La force est $F = k_{elas}\cdot x$, donc le système vu de la boucle force est :
 
-$$G_{force}(s) = k_{elas}\cdot T_{position}(s)$$
-
-$$T_{force}(s) = \frac{C_3(s)\cdot G_{force}(s)}{1 + C_3(s)\cdot G_{force}(s)}$$
+```math
+G_{force}(s) = k_{elas}\cdot T_{position}(s)
+\qquad
+T_{force}(s) = \frac{C_3(s)\cdot G_{force}(s)}{1 + C_3(s)\cdot G_{force}(s)}
+```
 
 ### Ordre de réglage
 
@@ -162,12 +170,3 @@ Le fichier [Modele_Projet_H2026_Gabarit.slx](../Modele_Projet_H2026_Gabarit.slx)
 
 → [05_cascade_complet.m](05_cascade_complet.m)
 
----
-
-## Questions de révision
-
-1. Dans quel ordre règle-t-on les boucles d'une cascade ? Pourquoi cet ordre ?
-2. Que se passe-t-il si la bande passante de la boucle externe dépasse celle de la boucle interne ?
-3. Pourquoi approxime-t-on $T_{vitesse}(s) \approx 1$ lorsqu'on règle la boucle de position ?
-4. Quelle grandeur physique la boucle de force régule-t-elle exactement ? Comment est-elle mesurée ?
-5. Si on voulait ajouter une 4ème boucle (courant moteur), quelle serait sa bande passante minimale ?

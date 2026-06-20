@@ -32,7 +32,9 @@ Le correcteur $C(s)$ doit donc apporter :
 
 ### Structure
 
-$$C_{lead}(s) = K\cdot\frac{Ts+1}{\alpha Ts+1}, \qquad 0 < \alpha < 1$$
+```math
+C_{lead}(s) = K\cdot\frac{Ts+1}{\alpha Ts+1}, \qquad 0 < \alpha < 1
+```
 
 Le paramètre $\alpha < 1$ garantit que le zéro $\omega_z = 1/T$ est à une fréquence **inférieure** au pôle $\omega_p = 1/(\alpha T)$, ce qui produit une **avance** (et non un retard) de phase.
 
@@ -59,23 +61,31 @@ La phase maximale $\phi_{max}$ est atteinte à $\omega_{max} = \sqrt{\omega_z \c
 
 **Étape 1 — Phase maximale requise :**
 
-$$\phi_{max} = \phi_{m,cible} - 180° - \angle G_{BO}(j\omega_{cp})$$
+```math
+\phi_{max} = \phi_{m,cible} - 180° - \angle G_{BO}(j\omega_{cp})
+```
 
 *(Pour C2, ajouter −90° car l'intégrateur décale la phase de −90°)*
 
 **Étape 2 — Calcul de α :**
 
-$$\alpha = \frac{1 - \sin\phi_{max}}{1 + \sin\phi_{max}}$$
+```math
+\alpha = \frac{1 - \sin\phi_{max}}{1 + \sin\phi_{max}}
+```
 
 > Vérification : $\phi_{max} \leq 65°$ pour que $\alpha \geq 0.02$ (éviter l'amplification excessive du bruit).
 
 **Étape 3 — Calcul de T** (placer $\omega_{max}$ à $\omega_{cp}$) :
 
-$$T = \frac{1}{\omega_{cp}\sqrt{\alpha}}$$
+```math
+T = \frac{1}{\omega_{cp}\sqrt{\alpha}}
+```
 
 **Étape 4 — Calcul de K** (normaliser le gain à $\omega_{cp}$) :
 
-$$K_{lead} = \frac{\sqrt{\alpha}}{|G_{BO}(j\omega_{cp})|}$$
+```math
+K_{lead} = \frac{\sqrt{\alpha}}{|G_{BO}(j\omega_{cp})|}
+```
 
 ---
 
@@ -89,7 +99,9 @@ La boucle vitesse ($G_{BO\_v}$) est de **classe 0** : erreur statique non nulle.
 
 ### Structure du correcteur
 
-$$\boxed{C_2(s) = \frac{K}{s}\cdot\frac{Ts+1}{\alpha Ts+1}}$$
+```math
+C_2(s) = \frac{K}{s}\cdot\frac{Ts+1}{\alpha Ts+1}
+```
 
 ### Procédure complète
 
@@ -122,19 +134,25 @@ La boucle position ($G_{BO\_p}$) est de **classe 1** (intégrateur cinématique 
 
 ### Structure du correcteur
 
-$$\boxed{C_1(s) = K_p\cdot\frac{Ts+1}{\alpha Ts+1}}$$
+```math
+C_1(s) = K_p\cdot\frac{Ts+1}{\alpha Ts+1}
+```
 
 ### Différence clé avec C2
 
 La formule de l'avance requise devient :
 
-$$\phi_{max} = P_{m,cible} - 180° - \angle G_{BO\_p}(j\omega_{cp})$$
+```math
+\phi_{max} = P_{m,cible} - 180° - \angle G_{BO\_p}(j\omega_{cp})
+```
 
 *(Pas de −90° : l'intégrateur de la boucle est déjà dans $G_{BO\_p}$)*
 
-**Cas particulier :** si $\phi_{max} \leq 0$, le système a déjà assez de phase à $\omega_{cp}$. Un simple **gain proportionnel** suffit :
+**Cas particulier :** si $\phi_{max} \leq 0$, un simple gain proportionnel suffit :
 
-$$\phi_{max} \leq 0 \quad\Rightarrow\quad C_1(s) = K_p = \frac{1}{|G_{BO\_p}(j\omega_{cp})|}$$
+```math
+C_1(s) = K_p = \frac{1}{|G_{BO\_p}(j\omega_{cp})|}
+```
 
 | Étape | Formule | Valeur projet |
 |-------|---------|---------------|
@@ -150,21 +168,25 @@ $$\phi_{max} \leq 0 \quad\Rightarrow\quad C_1(s) = K_p = \frac{1}{|G_{BO\_p}(j\o
 
 La boucle externe contrôle la **force dans la bande élastique** :
 
-$$F = k_{elas} \cdot x \quad\Rightarrow\quad G_{sys3}(s) = k_{elas}\cdot T_{position}(s)$$
+```math
+F = k_{elas} \cdot x \quad\Rightarrow\quad G_{sys3}(s) = k_{elas}\cdot T_{position}(s)
+```
 
 Un **intégrateur pur** assure une erreur statique nulle sur la force et une bande passante très faible (2.5 rad/s) pour ne pas perturber les boucles internes.
 
 ### Structure du correcteur
 
-$$\boxed{C_3(s) = \frac{K_i}{s}}$$
+```math
+C_3(s) = \frac{K_i}{s}
+```
 
 ### Calcul du gain
 
 On impose $|L_{force}(j\omega_{cp})| = 1$ à $\omega_{cp} = 2.5$ rad/s :
 
-$$|C_3(j\omega_{cp})|\cdot|G_{sys3}(j\omega_{cp})| = 1 \quad\Rightarrow\quad \frac{K_i}{\omega_{cp}}\cdot|G_{sys3}(j\omega_{cp})| = 1$$
-
-$$\boxed{K_i = \frac{\omega_{cp}}{|G_{sys3}(j\omega_{cp})|}}$$
+```math
+K_i = \frac{\omega_{cp}}{|G_{sys3}(j\omega_{cp})|}
+```
 
 ---
 
@@ -187,12 +209,3 @@ $$\boxed{K_i = \frac{\omega_{cp}}{|G_{sys3}(j\omega_{cp})|}}$$
 - [04b_correcteur_position.m](04b_correcteur_position.m) — C1 : Lead seul
 - [04c_correcteur_force.m](04c_correcteur_force.m) — C3 : Intégrateur pur
 
----
-
-## Questions de révision
-
-1. Pourquoi le correcteur C2 (vitesse) contient-il un intégrateur mais pas C1 (position) ?
-2. Si $\phi_{max}$ calculé dépasse 65°, que se passe-t-il physiquement ? Quelle solution adopter ?
-3. Pour la boucle position, si $\phi_{max} < 0$, pourquoi un gain proportionnel suffit-il ?
-4. Comment vérifier que la synthèse a bien atteint les spécifications ? (Bode et stepinfo)
-5. Quel serait l'effet d'augmenter $\omega_{cp}$ de 50 à 100 rad/s pour C2 ? Quels compromis cela implique-t-il ?

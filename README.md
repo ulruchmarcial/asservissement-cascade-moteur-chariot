@@ -10,17 +10,13 @@
 
 ## Système physique
 
-![Photo du système physique](figures/photo_systeme.jpg)
-
-> **Pour ajouter votre photo :** déposez votre image dans `figures/` sous le nom `photo_systeme.jpg` (ou `.png`).
+![Photo du système physique](figures/photo_systeme.png)
 
 ---
 
 ## Schéma fonctionnel du système
 
-![Schéma fonctionnel](figures/schema_fonctionnel.jpg)
-
-> **Pour ajouter le schéma :** déposez une photo ou scan de votre schéma bloc dans `figures/` sous le nom `schema_fonctionnel.jpg`.
+![Schéma fonctionnel](figures/schema_fonctionnel.png)
 
 ---
 
@@ -171,19 +167,43 @@ GEI1013-Asservissement/
 
 ### Analyse fréquentielle — Boucles non corrigées
 
+#### Carte des pôles et zéros
+
 | Boucle vitesse | Boucle position |
 |:-:|:-:|
 | ![Carte pôles-zéros vitesse](figures/02a_pzmap_vitesse.png) | ![Carte pôles-zéros position](figures/02b_pzmap_position.png) |
-| Carte pôles-zéros — $G_{BO\_v}$ | Carte pôles-zéros — $G_{BO\_p}$ |
+| $G_{BO\_v}$ — classe 0, ordre 4 | $G_{BO\_p}$ — classe 1, ordre 5 |
+
+> **Observation :** tous les pôles sont dans le demi-plan gauche (partie réelle < 0), ce qui confirme que les deux boucles ouvertes sont **stables en elles-mêmes**. On note la présence d'une paire de pôles complexes conjugués à haute fréquence (filtre LC très peu amorti, $\xi \approx 2\times10^{-4}$) et de pôles réels lents liés à la mécanique du moteur-chariot. La boucle position possède un pôle supplémentaire en $s=0$ (l'intégrateur cinématique $r/Gs$), ce qui la rend de classe 1.
+>
+> **Ce qu'il reste à vérifier :** la stabilité des pôles en boucle **fermée** dépend du gain appliqué — un gain trop élevé peut déplacer les pôles vers le demi-plan droit. C'est ce que montre le lieu des racines ci-dessous.
+
+---
+
+#### Diagrammes de Bode et marges de stabilité
 
 | Bode vitesse (non corrigé) | Bode position (non corrigé) |
 |:-:|:-:|
 | ![Bode vitesse BO](figures/02c_bode_vitesse_BO.png) | ![Bode position BO](figures/02d_bode_position_BO.png) |
 | Marges de $G_{BO\_v}$ | Marges de $G_{BO\_p}$ |
 
+> **Observation :** les diagrammes de Bode révèlent les marges de stabilité des boucles ouvertes **sans correcteur**. La marge de phase ($P_m$) indique le retard de phase supplémentaire tolérable avant instabilité. Une marge trop faible ($P_m < 45°$) se traduit par des oscillations importantes ou une instabilité en boucle fermée.
+>
+> **Problème identifié :** la marge de phase obtenue sans correcteur est insuffisante pour atteindre les spécifications ($P_m \geq 50°$). De plus, la boucle vitesse ($G_{BO\_v}$, classe 0) présente une **erreur statique non nulle** à un échelon de consigne — son gain statique est fini, ce qui empêche d'atteindre parfaitement la référence en régime permanent.
+>
+> **Remède prévu :** synthétiser un correcteur pour chaque boucle (voir section Synthèse) afin d'imposer simultanément la pulsation de coupure $\omega_{cp}$ cible et la marge de phase $\geq 50°$.
+
+---
+
+#### Lieu des racines
+
 | Lieu des racines vitesse | Lieu des racines position |
 |:-:|:-:|
 | ![Lieu racines vitesse](figures/02e_rlocus_vitesse.png) | ![Lieu racines position](figures/02f_rlocus_position.png) |
+
+> **Observation :** le lieu des racines montre comment les pôles en **boucle fermée** se déplacent dans le plan complexe quand on augmente le gain $K$ de 0 à $+\infty$. Pour $K=0$, les pôles BF coïncident avec les pôles BO. À mesure que $K$ croît, certaines branches migrent vers le demi-plan droit, signalant une **instabilité par gain excessif**.
+>
+> **Interprétation :** il existe une valeur maximale de gain à ne pas dépasser. Le correcteur Lead (réseau d'avance de phase) a précisément pour effet de replier ces branches vers la gauche, élargissant la marge de gain utilisable et permettant des bandes passantes plus élevées sans déstabiliser le système.
 
 ---
 
@@ -192,6 +212,14 @@ GEI1013-Asservissement/
 | Échelon BO vitesse | Échelon BF vitesse (gain=1) | Échelon BF position (gain=1) |
 |:-:|:-:|:-:|
 | ![Step BO vitesse](figures/03a_step_vitesse_BO.png) | ![Step BF vitesse brut](figures/03b_step_vitesse_BF_brut.png) | ![Step BF position brut](figures/03c_step_position_BF_brut.png) |
+
+> **Observation — Boucle ouverte vitesse :** sans rétroaction, la vitesse monte librement sans jamais se stabiliser à une valeur précise. Il n'y a aucun mécanisme de correction de l'erreur.
+>
+> **Observation — Boucle fermée vitesse (sans correcteur) :** la vitesse se stabilise mais **n'atteint pas la valeur de référence 1** — il subsiste une erreur statique permanente. Ceci est la conséquence directe du fait que $G_{BO\_v}$ est de **classe 0** : le gain statique $K_p$ est fini, donc l'erreur est $\varepsilon = 1/(1+K_p) \neq 0$.
+>
+> **Observation — Boucle fermée position (sans correcteur) :** la position atteint bien la valeur finale de 1 (erreur nulle à l'échelon grâce à la classe 1), mais le **dépassement et le temps de réponse** peuvent ne pas respecter les spécifications.
+>
+> **Remède prévu :** le correcteur C2 (boucle vitesse) intègre une action **intégrale** (terme $K/s$) qui élève la classe de 0 à 1, annulant ainsi l'erreur statique. Le réseau d'avance associé compense les −90° de phase introduits par cet intégrateur pour maintenir la marge de phase à 50°.
 
 ---
 
@@ -203,17 +231,35 @@ GEI1013-Asservissement/
 |:-:|:-:|
 | ![Bode L vitesse](figures/04a_bode_L_vitesse.png) | ![Step BF vitesse](figures/04b_step_BF_vitesse.png) |
 
+> **Observation — Bode :** après correction, la courbe de gain croise 0 dB exactement à $\omega_{cp} = 50$ rad/s et la marge de phase atteint $\geq 50°$. L'action intégrale ($K/s$) est visible dans la montée du gain en basses fréquences (pente −20 dB/décade), garantissant une erreur statique nulle. Le réseau d'avance apporte le surcroît de phase nécessaire autour de $\omega_{cp}$ pour compenser le retard introduit par cet intégrateur.
+>
+> **Observation — Step BF :** la vitesse suit la consigne sans erreur en régime permanent, avec un dépassement $\leq 16\%$ et un temps de réponse conforme aux spécifications — les deux critères attendus d'une marge de phase de 50°.
+
+---
+
 #### Boucle position C₁ (Lead, ωcp = 15 rad/s)
 
 | Bode BO corrigée | Réponse indicielle BF |
 |:-:|:-:|
 | ![Bode L position](figures/04c_bode_L_position.png) | ![Step BF position](figures/04d_step_BF_position.png) |
 
+> **Observation — Bode :** la boucle position contient déjà un intégrateur naturel (cinématique $r/Gs$), donc la pente du gain est déjà de −20 dB/décade en basses fréquences. Le correcteur Lead seul (sans intégrateur supplémentaire) suffit à relever la phase à $\omega_{cp} = 15$ rad/s et à placer la coupure à la fréquence cible.
+>
+> **Observation — Step BF :** la position atteint la valeur de référence sans erreur statique (classe 1 conservée), avec un dépassement et un temps de réponse maîtrisés. La bande passante de 15 rad/s est volontairement **3× plus lente** que la boucle vitesse (50 rad/s) pour assurer leur découplage dynamique.
+
+---
+
 #### Boucle force C₃ (Intégrateur, ωcp = 2.5 rad/s)
 
 | Bode G_sys3 (avant correction) | Bode BO corrigée | Réponse indicielle BF |
 |:-:|:-:|:-:|
 | ![Bode Gsys3](figures/04e_bode_Gsys3.png) | ![Bode L force](figures/04f_bode_L_force.png) | ![Step BF force](figures/04g_step_BF_force.png) |
+
+> **Observation — Bode avant correction :** la plante $G_{sys3} = k_{elas} \times T_{position}$ hérite déjà de la dynamique de la boucle position fermée. Elle présente une phase naturellement en retard, mais la marge disponible permet d'y ajouter un intégrateur pur.
+>
+> **Observation — Bode après correction :** le correcteur $C_3(s) = K_i/s$ place la coupure à $\omega_{cp} = 2.5$ rad/s avec une marge de phase suffisante. La bande passante est volontairement **très faible** (6× plus lente que la boucle position) pour deux raisons : ① ne pas exciter les modes de résonance du ressort élastique et ② respecter la règle de séparation des bandes passantes de la commande en cascade.
+>
+> **Observation — Step BF :** la force dans la bande élastique suit la référence sans erreur statique (l'intégrateur $K_i/s$ annule l'erreur à l'échelon), mais avec un temps de réponse lent (~4–8 s), ce qui est voulu et acceptable pour une boucle de force externe.
 
 ---
 
@@ -223,4 +269,6 @@ GEI1013-Asservissement/
 |:-:|:-:|
 | ![Cascade step responses](figures/05_cascade_step_responses.png) | ![Bode comparaison 3 boucles](figures/05_bode_comparaison_3_boucles.png) |
 
-La séparation des bandes passantes est clairement visible : $\omega_{cp,force} \ll \omega_{cp,pos} \ll \omega_{cp,vitesse}$.
+> **Observation — Réponses en cascade :** les trois boucles fermées répondent chacune à leur référence avec les performances spécifiées. On note clairement les **échelles de temps différentes** : la boucle vitesse est la plus rapide (~0.1 s), la position est intermédiaire (~1 s), et la force est la plus lente (~5–10 s). Cette hiérarchie est fondamentale : si les boucles avaient des vitesses comparables, leurs dynamiques interagiraient et les hypothèses de conception ne seraient plus valides.
+>
+> **Observation — Comparaison des Bode BO corrigées :** le graphique superpose les trois courbes de gain. La **séparation des pulsations de coupure** ($\omega_{cp} = 2.5$, $15$ et $50$ rad/s) est clairement visible — chaque boucle croise 0 dB à sa fréquence cible, bien séparée de ses voisines. C'est la signature visuelle du bon découplage de la cascade : chaque boucle "voit" ses voisines comme des gains unitaires dans sa propre bande passante, ce qui valide rétrospectivement les hypothèses de conception indépendante de chaque correcteur.
