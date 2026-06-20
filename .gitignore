@@ -1,0 +1,27 @@
+# MATLAB
+*.asv
+*.m~
+*.mex*
+*.mlapp
+octave-workspace
+slprj/
+*.slxc
+
+# Fichiers workspace temporaires
+modele_systeme.mat
+correcteur_vitesse.mat
+correcteur_position.mat
+correcteur_force.mat
+
+# Figures (générées par export_figures.m — à committer manuellement)
+# Décommenter la ligne suivante pour ignorer les figures :
+# figures/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Éditeurs
+.vscode/
+*.code-workspace
